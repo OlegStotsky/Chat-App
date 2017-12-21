@@ -18,13 +18,14 @@ socket.on('newMessage', function(data) {
 });
 
 socket.on('newLocationMessage', function({from, url, createdAt}) {
-  const li = $('<li></li>');
-  const a = $('<a target="_blank"></a>');
-  li.text(`from: ${from} `);
-  a.attr('href', url);
-  a.text('My current location');
-  li.append(a);
-  $('#message-board').append(li); 
+  const formattedTime = moment(createdAt).format('h:mm a');
+  const locationMessageTemplate = $('#location-message-template').html();
+  const html = Mustache.render(locationMessageTemplate, {
+    from,
+    url,
+    createdAt: formattedTime
+  });
+  $('#message-board').append(html);
 });
 
 $('#message-form').on('submit', function(e) {
