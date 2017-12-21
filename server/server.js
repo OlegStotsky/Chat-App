@@ -16,6 +16,15 @@ io.on('connection', (socket) => {
 
   socket.on('createMessage', function(message) {
     console.log('createMessage', message);
+    socket.emit('newMessage', {
+      from: 'Admin',
+      text: 'Welcome to the server'
+    });
+    socket.broadcast.emit('newMessage', {
+      from: 'Admin',
+      text: 'New user joined the channel'
+    });
+
     io.emit('newMessage', {
       from: message.from,
       text: message.text,
