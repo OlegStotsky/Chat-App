@@ -10,6 +10,15 @@ socket.on('newMessage', function(data) {
   li.text(`from: ${data.from} message: ${data.text}`);
   $('#message-board').append(li);
 });
+socket.on('newLocationMessage', function({from, url, createdAt}) {
+  const li = $('<li></li>');
+  const a = $('<a target="_blank"></a>');
+  li.text(`from: ${from} `);
+  a.attr('href', url);
+  a.text('My current location');
+  li.append(a);
+  $('#message-board').append(li); 
+});
 
 $('#message-form').on('submit', function(e) {
   e.preventDefault();

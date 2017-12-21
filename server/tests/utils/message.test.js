@@ -1,4 +1,4 @@
-const {generateMessage} = require('../../utils/message.js');
+const {generateMessage, generateLocationMessage} = require('../../utils/message.js');
 const {expect} = require('chai');
 
 describe('generate message', () => {
@@ -13,3 +13,17 @@ describe('generate message', () => {
      });
   })
 })
+
+describe('generateLocationMessage', () => {
+  it ('should generate the correct location message object', () => {
+    const from = 'Admin';
+    const lat = 12;
+    const lng = 15;
+    const url = `https://www.google.com/maps?q=${lat},${lng}`
+    const locationMessage = generateLocationMessage(from, lat, lng);
+    expect(locationMessage.createdAt).to.be.a('number');
+    expect(locationMessage).to.include({
+      url
+    });
+  });
+});
