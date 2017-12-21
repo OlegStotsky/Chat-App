@@ -5,11 +5,13 @@ socket.on('connect', function() {
 socket.on('disconnect', function() {
   console.log('Disconnected from server');
 });
+
 socket.on('newMessage', function(data) {
   const li = $('<li></li>');
   li.text(`from: ${data.from} message: ${data.text}`);
   $('#message-board').append(li);
 });
+
 socket.on('newLocationMessage', function({from, url, createdAt}) {
   const li = $('<li></li>');
   const a = $('<a target="_blank"></a>');
@@ -22,16 +24,24 @@ socket.on('newLocationMessage', function({from, url, createdAt}) {
 
 $('#message-form').on('submit', function(e) {
   e.preventDefault();
+
+  const messageTextbox = $('[name=message]');
+
   socket.emit('createMessage', {
     from: 'User',
-    text: e.target.message.value
+    text: messageTextbox.val()
   });
+  messageTextbox.val('');
 });
 
-$('#send-location').on('click', function(e) {
+const sendLocation = $('#send-location');
+sendLocation.on('click', function(e) {
   if (!navigator.geolocation) {
     return alert('Your browser doesn\'t support geolocation');
   }
+  sendLocation.attr('disabled', true);
+  const defaultText = sendLocation.text();
+  sendLocation.text('Fetching location...');
 
   navigator.geolocation.getCurrentPosition(function(position) {
     socket.emit('createLocationMessage', {
@@ -39,6 +49,9 @@ $('#send-location').on('click', function(e) {
       lat: position.coords.latitude,
       lng: position.coords.longitude
     });
+    sendLocation.text(defaultText);
+    sendLocation.attr('disabled', false);
   }, function() {
+    alert('Unable to fetch location');
   });
 });
