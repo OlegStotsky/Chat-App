@@ -17,4 +17,19 @@ $('#message-form').on('submit', function(e) {
     from: 'User',
     text: e.target.message.value
   });
-})
+});
+
+$('#send-location').on('click', function(e) {
+  if (!navigator.geolocation) {
+    return alert('Your browser doesn\'t support geolocation');
+  }
+
+  navigator.geolocation.getCurrentPosition(function(position) {
+    socket.emit('createLocationMessage', {
+      from: 'User',
+      lat: position.coords.latitude,
+      lng: position.coords.longitude
+    });
+  }, function() {
+  });
+});

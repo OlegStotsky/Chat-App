@@ -19,6 +19,9 @@ io.on('connection', (socket) => {
 
   socket.on('createMessage', function(message) {
     io.emit('newMessage', generateMessage(message.from, message.text));
+  });
+  socket.on('createLocationMessage', function(message) {
+    io.emit('newMessage', generateMessage(message.from, `I'm at (${message.lat}, ${message.lng})`));
   })
   socket.on('disconnect', () => {
     console.log('Disconnected');
