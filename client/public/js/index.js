@@ -7,9 +7,14 @@ socket.on('disconnect', function() {
 });
 
 socket.on('newMessage', function(data) {
-  const li = $('<li></li>');
-  li.text(`from: ${data.from} message: ${data.text}`);
-  $('#message-board').append(li);
+  const formattedTime = moment(data.createdAt).format('h:mm a');
+  const messageTemplate = $('#message-template').html();
+  const html = Mustache.render(messageTemplate, {
+    text: data.text,
+    from: data.from,
+    createdAt: formattedTime
+  });
+  $('#message-board').append(html);
 });
 
 socket.on('newLocationMessage', function({from, url, createdAt}) {
